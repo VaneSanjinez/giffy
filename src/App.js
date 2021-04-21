@@ -1,34 +1,33 @@
 import React, {useState, useEffect} from 'react';
 import './App.css';
+import getGifs from './services/getGifs';
 
 
-const apiUrl = 'https://api.giphy.com/v1/gifs/search?api_key=2AVXCSVVGMc70DwnTcdX2NXPXMrg9Wth&q=panda&limit=10&offset=0&rating=g&lang=en'
+
 
 function App() {
   const [gifs, setGifs] = useState([])
   
   useEffect(function(){
-    console.log('effect ran');
-    fetch(apiUrl)
-      .then(res => res.json())
-      .then(response => {
-        const {data} = response
-        const gifs = data.map(image => image.images.downsized_medium.url)
-        console.log(gifs)
-        setGifs(gifs)
-      })
-  }, []) //component DidMount
+    getGifs({keyword : 'rugrats'}).then(gifs => setGifs(gifs))
+   
+  }, []) 
 
 
   return (
     <div className="App">
       <section className="App-content">
-        {
-          gifs.map(singleGif => <img src = {singleGif}/>)
-        }
+        { 
+          gifs.map(singleGif => {
+            return <div>
+                <h4> {singleGif.title}</h4>
+                <small>{singleGif.id}</small>
+                <img alt = {singleGif.title}src = {singleGif.url}/>
+            </div>
+          })
+    }
       </section>
     </div>
   );
 }
-
 export default App;
